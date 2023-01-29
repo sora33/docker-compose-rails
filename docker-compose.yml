@@ -1,0 +1,33 @@
+#yml　はkey value　という書き方
+#docker build　や docker run のオプションを書く
+#最初にバージョンを記載する,次にservie, パラーメータを書く
+# serviceはweb,app, db　など
+
+
+version: '3'
+
+volumes:
+  db-data:
+
+services:
+  web:
+    build: .
+    ports:
+      - '3000:3000'
+    volumes:
+      - '.:/product-register'
+    environment:
+      - 'DATABASE_PASSWORD=postgres'
+    tty: true
+    stdin_open: true
+    depends_on:
+      - db
+    links:
+      - db
+  db:
+    image: postgres
+    volumes:
+      - 'db-data:/var/lib/postgresql/data'
+    environment:
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_PASSWORD=postgres'
